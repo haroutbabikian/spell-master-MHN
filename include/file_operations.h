@@ -1,7 +1,9 @@
 #ifndef FILE_OPERATIONS_H
 #define FILE_OPERATIONS_H
 
-// Function to read spells from the file and return them as an array of strings
-char** readSpellsFromFile(const char* filename, int* numSpells);
+#define MAX_SPELL_LENGTH 50
+#define MAX_SPELLS 100
 
-#endif /* FILE_OPERATIONS_H */
+int readSpells(const char* filename, char spells[][MAX_SPELL_LENGTH]);
+
+#endif

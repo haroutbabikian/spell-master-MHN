@@ -1,36 +1,14 @@
 #include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #include "user_input.h"
 
-// Validation function
-int getPlayerMove(const char** spells, int numSpells, const char* previousSpell, char* playerName) {
-    char spellChoice[100];
+void getPlayerNames(char player1[], char player2[]) {
+    printf("Enter the name of Player 1: ");
+    scanf("%s", player1);
+    printf("Enter the name of Player 2: ");
+    scanf("%s", player2);
+}
 
-    while (1) {
-        printf("%s, enter your spell choice: ", playerName);
-        scanf("%s", spellChoice);
-
-        int valid = 0;
-        for (int i = 0; i < numSpells; i++) {
-            if (strcmp(spellChoice, spells[i]) == 0) {
-                if (strcmp(spellChoice, previousSpell) != 0) {
-                    if (spellChoice[0] == previousSpell[strlen(previousSpell) - 1]) {
-                        valid = 1;
-                        break;
-                    } else {
-                        printf("Invalid move: The first character of your spell does not match the last character of the previous spell.\n");
-                    }
-                } else {
-                    printf("Invalid move: You've already cast this spell in a previous round.\n");
-                }
-            }
-        }
-
-        if (valid) {
-            return 1;
-        } else {
-            printf("Invalid move: Please choose a valid spell from the list.\n");
-        }
-    }
+void getPlayerSpell(int currentPlayer, char spell[], char player1[], char player2[]) {
+    printf("%s, enter your spell choice: ", (currentPlayer == 0) ? player1 : player2);
+    scanf("%s", spell);
 }

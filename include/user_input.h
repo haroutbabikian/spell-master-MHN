@@ -1,7 +1,10 @@
 #ifndef USER_INPUT_H
 #define USER_INPUT_H
 
-// Function to obtain a player's spell choice and validate it
-int getPlayerMove(const char** spells, int numSpells, const char* previousSpell, char* playerName);
+#define MAX_NAME_LENGTH 50
+
+void getPlayerNames(char player1[], char player2[]);
+
+void getPlayerSpell(int currentPlayer, char spell[], char player1[], char player2[]);
 
 #endif

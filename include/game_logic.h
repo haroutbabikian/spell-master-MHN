@@ -1,11 +1,15 @@
-#ifndef SPELL_MASTER_H
-#define SPELL_MASTER_H
+#ifndef GAME_LOGIC_H
+#define GAME_LOGIC_H
 
-#include <stdio.h>
-#include <stdlib.h>
+#define MAX_SPELL_LENGTH 50
+#define MAX_SPELLS 100
 
-int coin_toss();
+int isMoveValid(char spell[], char spells[][MAX_SPELL_LENGTH], int numSpells, char board[][MAX_SPELL_LENGTH], int boardSize);
 
-int getPlayerMove(const char** spells, int numSpells, const char* previousSpell, char* playerName);
+void addToBoard(char spell[], char board[][MAX_SPELL_LENGTH], int* boardSize);
 
-#endif /* SPELL_MASTER_H */
+int coinToss();
+
+int playGame(char player1[], char player2[], int startingPlayer, char spells[][MAX_SPELL_LENGTH], int numSpells, char board[][MAX_SPELL_LENGTH], int* boardSize);
+
+#endif

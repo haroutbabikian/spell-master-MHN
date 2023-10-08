@@ -1,47 +1,28 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "file_operations.h"
 #include "user_input.h"
+#include "file_operations.h"
+#include "game_logic.h"
 #include "winner_determination.h"
 
 int main() {
-    // Initialize the game
-
+    char player1[MAX_NAME_LENGTH];
+    char player2[MAX_NAME_LENGTH];
+    char spells[MAX_SPELLS][MAX_SPELL_LENGTH];
     int numSpells;
-    char** spells = readSpellsFromFile("spells.txt", &numSpells);
 
-    char player1[50]; 
-    char player2[50];
+    numSpells = readSpells("spells.txt", spells);
 
-    printf("Enter Player 1's name (no spaces): ");
-    scanf("%s", player1);
-    printf("Enter Player 2's name (no spaces): ");
-    scanf("%s", player2);
+    getPlayerNames(player1, player2);
 
-    int currentPlayer = 1; // Player 1 starts
-    char* previousSpell = NULL;
+    int startingPlayer = coinToss();
 
-    while (1) {
-        // Alternate between players
-        char* currentPlayerName = (currentPlayer == 1) ? player1 : player2;
+    char board[MAX_SPELLS][MAX_SPELL_LENGTH];
+    int boardSize = 0;
 
-        displaySpells(spells, numSpells);
+    int winner = playGame(player1, player2, startingPlayer, spells, numSpells, board, &boardSize);
 
-        // Check validity
-        int validMove = getPlayerMove(spells, numSpells, previousSpell, currentPlayerName);
-
-        if (validMove) {
-
-            previousSpell = strdup(spellChoice);
-
-            if (checkWinCondition(spells, numSpells, previousSpell)) {
-                printf("%s wins!\n", currentPlayerName);
-                break;
-            }
-
-            currentPlayer = (currentPlayer == 1) ? 2 : 1;
-        }
-    }
+    announceWinner(player1, player2, winner);
 
     return 0;
 }
