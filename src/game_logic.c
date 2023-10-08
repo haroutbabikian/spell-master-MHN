@@ -81,6 +81,21 @@ int playGame(char player1[], char player2[], int startingPlayer, char spells[][M
 
         // Next player
         currentPlayer = 1 - currentPlayer;
+
+        // Check if other player has any more options lol
+        int opponentHasValidSpells = 0;
+        for (int i = 0; i < numSpells; i++) {
+            if (spells[i][0] == lastSpell[strlen(lastSpell) - 1]) {
+                opponentHasValidSpells = 1;
+                break;
+            }
+        }
+        
+        if (!opponentHasValidSpells) {
+            winner = 1 - currentPlayer;
+            printf("No more spells in the list that satisfy the character matching condition.\n");
+            break;
+        }
     }
 
     return winner;
