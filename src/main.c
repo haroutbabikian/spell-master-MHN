@@ -30,5 +30,5 @@ int main() {
 
     announceWinner(player1, player2, winner);
 
-    return 0;
+    return 0;
 }

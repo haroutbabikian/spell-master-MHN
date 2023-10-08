@@ -27,6 +27,6 @@ void displaySpells(char spells[][MAX_SPELL_LENGTH], int numSpells) {
             printf("\n");
         } else {
             printf("\t");
-        }
-    }
+        }
+    }
 }
