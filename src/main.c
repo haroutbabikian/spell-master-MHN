@@ -12,6 +12,10 @@ int main() {
     int numSpells;
 
     numSpells = readSpells("spells.txt", spells);
+    
+    if (numSpells == 0) {
+        return 1;
+    }
 
     getPlayerNames(player1, player2);
 
@@ -20,9 +24,11 @@ int main() {
     char board[MAX_SPELLS][MAX_SPELL_LENGTH];
     int boardSize = 0;
 
+    displaySpells(spells, numSpells);
+
     int winner = playGame(player1, player2, startingPlayer, spells, numSpells, board, &boardSize);
 
     announceWinner(player1, player2, winner);
 
-    return 0;
+    return 0;
 }

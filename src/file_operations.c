@@ -19,3 +19,14 @@ int readSpells(const char* filename, char spells[][MAX_SPELL_LENGTH]) {
     fclose(file);
     return numSpells;
 }
+void displaySpells(char spells[][MAX_SPELL_LENGTH], int numSpells) {
+    printf("List of Spells:\n");
+    for (int i = 0; i < numSpells; i++) {
+        printf("%-15s", spells[i]); // Adjust the width as needed
+        if ((i + 1) % 5 == 0 || i == numSpells - 1) {
+            printf("\n");
+        } else {
+            printf("\t");
+        }
+    }
+}
