@@ -24,10 +24,10 @@ int isMoveValid(char spell[], char spells[][MAX_SPELL_LENGTH], int numSpells, ch
     }
 
     if (!validSpell) {
-        printf("Invalid spell! Spell not in the list.\n");
+        printf("Invalid spell Wizard! Spell not in the list.\n");
         return 0;
     } else if (repeatedSpell) {
-        printf("Invalid spell! Spell has already been cast.\n");
+        printf("Invalid spell Wizard! Spell has already been cast.\n");
         return 0;
     } else {
         return 1;
@@ -50,33 +50,34 @@ int playGame(char player1[], char player2[], int startingPlayer, char spells[][M
 
     printf("%s starts!\n", (currentPlayer == 0) ? player1 : player2);
 
+    char lastSpell[MAX_SPELL_LENGTH] = ""; // Previos spell played
+
     while (1) {
         char spell[MAX_SPELL_LENGTH];
         getPlayerSpell(currentPlayer, spell, player1, player2);
 
         if (!isMoveValid(spell, spells, numSpells, board, *boardSize)) {
-            // Invalid move, repeat turn
-            continue;
+            winner = 1 - currentPlayer;
+            break;
+        }
+
+        // Checks the Spell Master Condition
+        if (lastSpell[0] != '\0' && spell[0] != lastSpell[strlen(lastSpell) - 1]) {
+            printf("Invalid spell Wizard! The first character does not match the last character of the previous spell.\n");
+            winner = 1 - currentPlayer;
+            break;
         }
 
         addToBoard(spell, board, boardSize);
 
         // Check if the game has ended
-        int validMoveExists = 0;
-        for (int i = 0; i < numSpells; i++) {
-            if (spell[strlen(spell) - 1] == spells[i][0]) {
-                if (!isMoveValid(spells[i], spells, numSpells, board, *boardSize)) {
-                    continue;
-                }
-                validMoveExists = 1;
-                break;
-            }
-        }
-
-        if (!validMoveExists) {
-            winner = currentPlayer;
+        if (*boardSize == numSpells) {
+            winner = -1;
             break;
         }
+
+        // Update last spell played
+        strcpy(lastSpell, spell);
 
         // Next player
         currentPlayer = 1 - currentPlayer;
