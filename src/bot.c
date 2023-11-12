@@ -7,10 +7,23 @@
 
 static int botDifficulty;
 
+// Initializes the bot with a given difficulty level.
+// Parameters:
+// difficulty: An integer value representing the bot's difficulty level.
+// Effects:
+// Sets the global variable botDifficulty to the provided difficulty value.
 void initializeBot(int difficulty) {
     botDifficulty = difficulty;
 }
 
+// Chooses a move for the bot on easy difficulty.
+// Parameters:
+// spells: A 2D array of characters representing the list of available spells.
+// numSpells: An integer indicating the number of spells.
+// board: A 2D array of characters representing the game board.
+// boardSize: An integer representing the number of spells on the board.
+// Effects:
+// Returns the index of the selected spell for an easy bot move, or -1 if no valid move is found.
 int chooseBotMoveEasy(char spells[][MAX_SPELL_LENGTH], int numSpells, char board[][MAX_SPELL_LENGTH], int boardSize) {
     if (boardSize == 0) {
         // Bot starts first, no need to check for valid spells
@@ -28,6 +41,9 @@ int chooseBotMoveEasy(char spells[][MAX_SPELL_LENGTH], int numSpells, char board
     return -1; // Bot couldn't find a valid spell
 }
 
+
+// Chooses a move for the bot on medium difficulty, prioritizing moves that limit the opponent's options.
+// Parameters and effects similar to chooseBotMoveEasy.
 // Prioritize spells that limit the opponent's options in the next turn.
 int chooseBotMoveMedium(char spells[][MAX_SPELL_LENGTH], int numSpells, char board[][MAX_SPELL_LENGTH], int boardSize) {
     int bestMoveIndex = -1;
@@ -83,6 +99,10 @@ int chooseBotMoveMedium(char spells[][MAX_SPELL_LENGTH], int numSpells, char boa
     return bestMoveIndex;
 }
 
+
+// Chooses a move for the bot on hard difficulty. It checks for winning and blocking moves, and defaults to the medium strategy if neither is available.
+// Parameters: Same as chooseBotMoveMedium.
+// Effects: Returns the index of the chosen spell.
 int chooseBotMoveHard(char spells[][MAX_SPELL_LENGTH], int numSpells, char board[][MAX_SPELL_LENGTH], int boardSize) {
     int winningMoveIndex = findWinningMove(spells, numSpells, board, boardSize);
 
@@ -102,6 +122,10 @@ int chooseBotMoveHard(char spells[][MAX_SPELL_LENGTH], int numSpells, char board
     return chooseBotMoveMedium(spells, numSpells, board, boardSize);
 }
 
+
+// Finds a winning move for the bot.
+// Parameters: Same as chooseBotMoveMedium.
+// Effects: Returns the index of a winning move if one exists, otherwise returns -1.
 int findWinningMove(char spells[][MAX_SPELL_LENGTH], int numSpells, char board[][MAX_SPELL_LENGTH], int boardSize) {
     // Check if there is a move that leads to victory
     for (int i = 0; i < numSpells; i++) {
@@ -125,6 +149,10 @@ int findWinningMove(char spells[][MAX_SPELL_LENGTH], int numSpells, char board[]
     return -1; // No winning move found
 }
 
+
+// Finds a blocking move for the bot.
+// Parameters: Same as chooseBotMoveMedium.
+// Effects: Returns the index of a blocking move if one exists, otherwise returns -1.
 int findBlockingMove(char spells[][MAX_SPELL_LENGTH], int numSpells, char board[][MAX_SPELL_LENGTH], int boardSize) {
     // Check if there is a move that blocks the opponent from winning
     for (int i = 0; i < numSpells; i++) {
@@ -135,7 +163,7 @@ int findBlockingMove(char spells[][MAX_SPELL_LENGTH], int numSpells, char board[
 
                 int opponentWinningMove = findWinningMove(spells, numSpells, board, boardSize);
 
-                // Undo the simulated move
+                // Undo the simulated moves
                 removeLastSpell(board, &boardSize);
 
                 if (opponentWinningMove != -1) {
@@ -149,6 +177,13 @@ int findBlockingMove(char spells[][MAX_SPELL_LENGTH], int numSpells, char board[
     return -1; // No blocking move found
 }
 
+// Manages a game session between a human player and the bot.
+// Parameters:
+// player1, player2: Character arrays representing the player names.
+// startingPlayer: Integer indicating the starting player.
+// spells, numSpells, board, boardSize: Same as in the previous functions.
+// Effects:
+// Controls game turns, validates moves, and determines the winner. Returns the index of the winning player, or -1 if no winner.
 int playAgainstBot(char player1[], char player2[], int startingPlayer, char spells[][MAX_SPELL_LENGTH],
                    int numSpells, char board[][MAX_SPELL_LENGTH], int* boardSize) {
     int currentPlayer = startingPlayer;

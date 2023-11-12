@@ -5,6 +5,16 @@
 #include "game_logic.h"
 #include "user_input.h"
 
+
+// Checks if a given spell is valid.
+// Parameters:
+// spell: A character array representing the spell to be validated.
+// spells: A 2D array of characters representing the list of available spells.
+// numSpells: An integer indicating the number of spells.
+// board: A 2D array of characters representing the game board.
+// boardSize: An integer representing the number of spells on the board.
+// Returns:
+// 1 if the move is valid, 0 otherwise.
 int isMoveValid(char spell[], char spells[][MAX_SPELL_LENGTH], int numSpells, char board[][MAX_SPELL_LENGTH], int boardSize) {
     // Check if spell is in the list
     int validSpell = 0;
@@ -35,6 +45,11 @@ int isMoveValid(char spell[], char spells[][MAX_SPELL_LENGTH], int numSpells, ch
     }
 }
 
+
+// Checks if a given spell is valid for the bot.
+// Parameters: Same as isMoveValid.
+// Returns:
+// 1 if the move is valid, 0 otherwise. Designed for bot use, does not print messages.
 int isMoveValidBot(char spell[], char spells[][MAX_SPELL_LENGTH], int numSpells, char board[][MAX_SPELL_LENGTH], int boardSize) {
     // Check if spell is in the list
     int validSpell = 0;
@@ -63,21 +78,46 @@ int isMoveValidBot(char spell[], char spells[][MAX_SPELL_LENGTH], int numSpells,
     }
 }
 
-// Add a spell to the board
+
+// Adds a spell to the board.
+// Parameters:
+// spell: A character array representing the spell to be added.
+// board: A 2D array of characters representing the game board.
+// boardSize: A pointer to an integer representing the current number of spells on the board.
+// Effects:
+// The spell is added to the board, and boardSize is incremented.
 void addToBoard(char spell[], char board[][MAX_SPELL_LENGTH], int* boardSize) {
     strcpy(board[*boardSize], spell);
     (*boardSize)++;
 }
+
+// Removes the last spell from the board.
+// Parameters:
+// board: A 2D array of characters representing the game board.
+// boardSize: A pointer to an integer representing the current number of spells on the board.
+// Effects:
+// Decrements boardSize and clears the last spell from the board.
 void removeLastSpell(char board[][MAX_SPELL_LENGTH], int* boardSize) {
     (*boardSize)--;
     board[*boardSize][0] = '\0';
 }
 
+
+// Determines the starting player with a coin toss.
+// Returns:
+// An integer representing the result of the coin toss (0 or 1).
 int coinToss() {
     srand(time(NULL));
     return rand() % 2;
 }
 
+// Manages the gameplay between two players.
+// Parameters:
+// player1, player2: Character arrays representing the player names.
+// startingPlayer: Integer indicating the starting player.
+// spells, numSpells, board, boardSize: Similar to the other functions.
+// Returns:
+// The index of the winning player, -1 if no winner.
 int playGame(char player1[], char player2[], int startingPlayer, char spells[][MAX_SPELL_LENGTH], int numSpells, char board[][MAX_SPELL_LENGTH], int* boardSize) {
     int currentPlayer = startingPlayer;
     int winner = -1; // -1 for no winner, 0 for player 1, 1 for player 2
