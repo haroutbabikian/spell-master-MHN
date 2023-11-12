@@ -34,10 +34,42 @@ int isMoveValid(char spell[], char spells[][MAX_SPELL_LENGTH], int numSpells, ch
     }
 }
 
+int isMoveValidBot(char spell[], char spells[][MAX_SPELL_LENGTH], int numSpells, char board[][MAX_SPELL_LENGTH], int boardSize) {
+    // Check if spell is in the list
+    int validSpell = 0;
+    for (int i = 0; i < numSpells; i++) {
+        if (strcmp(spell, spells[i]) == 0) {
+            validSpell = 1;
+            break;
+        }
+    }
+
+    // Check if spell has been repeated
+    int repeatedSpell = 0;
+    for (int i = 0; i < boardSize; i++) {
+        if (strcmp(spell, board[i]) == 0) {
+            repeatedSpell = 1;
+            break;
+        }
+    }
+
+    if (!validSpell) {
+        return 0;
+    } else if (repeatedSpell) {
+        return 0;
+    } else {
+        return 1;
+    }
+}
+
 // Add a spell to the board
 void addToBoard(char spell[], char board[][MAX_SPELL_LENGTH], int* boardSize) {
     strcpy(board[*boardSize], spell);
     (*boardSize)++;
+}
+void removeLastSpell(char board[][MAX_SPELL_LENGTH], int* boardSize) {
+    (*boardSize)--;
+    board[*boardSize][0] = '\0';
 }
 
 int coinToss() {
