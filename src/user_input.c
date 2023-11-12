@@ -4,6 +4,16 @@
 #include "user_input.h"
 #include "bot.h"
 
+
+// Gets the names of the players.
+// Parameters:
+// player1: A character array to store the name of Player 1.
+// player2: A character array to store the name of Player 2 or "Bot".
+// Returns:
+// An integer representing the choice of opponent (1 for another player, 2 for bot).
+// Effects:
+// Player names are read from input. Ensures unique, single-word names with no spaces.
+// Repeats prompt until valid names are entered.
 int getPlayerNames(char player1[], char player2[]) {
     int choice;
     while (1) {
@@ -35,6 +45,14 @@ int getPlayerNames(char player1[], char player2[]) {
     return choice;
 }
 
+
+// Prompts the current player to enter a spell.
+// Parameters:
+// currentPlayer: An integer indicating the current player (0 for player 1, 1 for player 2 or bot).
+// spell: A character array to store the entered spell.
+// player1, player2: Character arrays containing the names of the players.
+// Effects:
+// Prompts the current player to enter their spell choice and stores it in the 'spell' array.
 void getPlayerSpell(int currentPlayer, char spell[], char player1[], char player2[]) {
     printf("%s, enter your spell choice: ", (currentPlayer == 0) ? player1 : player2);
     scanf("%s", spell);
