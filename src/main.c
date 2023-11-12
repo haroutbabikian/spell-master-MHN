@@ -22,7 +22,7 @@ int main() {
 
     if (choice == 2) {
         int difficulty;
-        printf("Choose bot difficulty:\n1. Easy\n2. Medium\n3. Hard\n");
+        printf("Choose bot difficulty:\n1. Easy\n2. Medium\n3. Hard\n(Enter 1, 2 or 3)\n");
         scanf("%d", &difficulty);
 
         // Call a function to initialize the bot with the chosen difficulty

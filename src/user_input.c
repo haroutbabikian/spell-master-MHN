@@ -10,7 +10,7 @@ int getPlayerNames(char player1[], char player2[]) {
         printf("Enter the name of Player 1 (single word, no spaces): ");
         scanf("%s", player1);
 
-        printf("Choose opponent:\n1. Another Player\n2. Bot\n");
+        printf("Choose opponent:\n1. Another Player\n2. Bot\n(Enter 1 or 2)\n");
         scanf("%d", &choice);
 
         if (choice == 1) {
