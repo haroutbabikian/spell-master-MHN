@@ -8,10 +8,14 @@
 static int botDifficulty;
 
 void initializeBot(int difficulty) {
+    //*testing strategy*
+    //partitioning initializeBot as follows: if botDifficulty is set to the proper difficulty
     botDifficulty = difficulty;
 }
 
 int chooseBotMoveEasy(char spells[][MAX_SPELL_LENGTH], int numSpells, char board[][MAX_SPELL_LENGTH], int boardSize) {
+    //*testing strategy*
+    //partitioning chooseBotMoveEasy as follows: bot's moves fall within appropriate range based on board state
     if (boardSize == 0) {
         // Bot starts first, no need to check for valid spells
         int botMoveIndex = rand() % numSpells; // Choose any spell randomly
@@ -30,6 +34,9 @@ int chooseBotMoveEasy(char spells[][MAX_SPELL_LENGTH], int numSpells, char board
 
 // Prioritize spells that limit the opponent's options in the next turn.
 int chooseBotMoveMedium(char spells[][MAX_SPELL_LENGTH], int numSpells, char board[][MAX_SPELL_LENGTH], int boardSize) {
+    //*testing strategy*
+    //partitioning chooseBotMoveMedium as follows: bot's moves fall within appropriate range based on board state
+
     int bestMoveIndex = -1;
     int bestOpponentOptions = numSpells + 1; // Initialize with a value greater than the maximum possible options
 
@@ -84,6 +91,8 @@ int chooseBotMoveMedium(char spells[][MAX_SPELL_LENGTH], int numSpells, char boa
 }
 
 int chooseBotMoveHard(char spells[][MAX_SPELL_LENGTH], int numSpells, char board[][MAX_SPELL_LENGTH], int boardSize) {
+    //*testing strategy*
+    //partitioning chooseBotMoveHard as follows: bot's moves fall within appropriate range based on board state
     int winningMoveIndex = findWinningMove(spells, numSpells, board, boardSize);
 
     if (winningMoveIndex != -1) {
@@ -103,6 +112,8 @@ int chooseBotMoveHard(char spells[][MAX_SPELL_LENGTH], int numSpells, char board
 }
 
 int findWinningMove(char spells[][MAX_SPELL_LENGTH], int numSpells, char board[][MAX_SPELL_LENGTH], int boardSize) {
+    //*testing strategy*
+    //partitioning findWinningMove as follows: correct range that outputs winning move
     // Check if there is a move that leads to victory
     for (int i = 0; i < numSpells; i++) {
         if (spells[i][0] == board[boardSize - 1][strlen(board[boardSize - 1]) - 1]) {
@@ -126,6 +137,9 @@ int findWinningMove(char spells[][MAX_SPELL_LENGTH], int numSpells, char board[]
 }
 
 int findBlockingMove(char spells[][MAX_SPELL_LENGTH], int numSpells, char board[][MAX_SPELL_LENGTH], int boardSize) {
+    //*testing strategy*
+    //partitioning findBlockingMove as follows: results are in a valid range
+
     // Check if there is a move that blocks the opponent from winning
     for (int i = 0; i < numSpells; i++) {
         if (spells[i][0] == board[boardSize - 1][strlen(board[boardSize - 1]) - 1]) {
@@ -151,6 +165,8 @@ int findBlockingMove(char spells[][MAX_SPELL_LENGTH], int numSpells, char board[
 
 int playAgainstBot(char player1[], char player2[], int startingPlayer, char spells[][MAX_SPELL_LENGTH],
                    int numSpells, char board[][MAX_SPELL_LENGTH], int* boardSize) {
+    //*testing strategy*
+    //partitioning playAgainstBot as follows: results are in the valid range
     int currentPlayer = startingPlayer;
     int winner = -1; // Default value for no winner
 

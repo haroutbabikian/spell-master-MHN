@@ -1,136 +1,36 @@
 #include <stdio.h>
 #include <string.h>
-#include <stdlib.h>
-#include <time.h>
-#include "game_logic.h"
-#include "user_input.h"
+#include "file_operations.h"
 
-int isMoveValid(char spell[], char spells[][MAX_SPELL_LENGTH], int numSpells, char board[][MAX_SPELL_LENGTH], int boardSize) {
-    // Check if spell is in the list
-    int validSpell = 0;
+int readSpells(const char* filename, char spells[][MAX_SPELL_LENGTH]) {
+    //*testing strategy*
+    //partitioning readSpells as follows:  valid file, empty file, file containing too many spells
+    FILE* file = fopen(filename, "r");
+    if (file == NULL) {
+        printf("Error opening file: %s\n", filename);
+        return 0; // Return 0 if error
+    }
+
+    int numSpells;
+    fscanf(file, "%d", &numSpells);
+
     for (int i = 0; i < numSpells; i++) {
-        if (strcmp(spell, spells[i]) == 0) {
-            validSpell = 1;
-            break;
-        }
+        fscanf(file, "%s", spells[i]);
     }
 
-    // Check if spell has been repeated
-    int repeatedSpell = 0;
-    for (int i = 0; i < boardSize; i++) {
-        if (strcmp(spell, board[i]) == 0) {
-            repeatedSpell = 1;
-            break;
-        }
-    }
-
-    if (!validSpell) {
-        printf("Invalid spell Wizard! Spell not in the list.\n");
-        return 0;
-    } else if (repeatedSpell) {
-        printf("Invalid spell Wizard! Spell has already been cast.\n");
-        return 0;
-    } else {
-        return 1;
-    }
+    fclose(file);
+    return numSpells;
 }
-
-int isMoveValidBot(char spell[], char spells[][MAX_SPELL_LENGTH], int numSpells, char board[][MAX_SPELL_LENGTH], int boardSize) {
-    // Check if spell is in the list
-    int validSpell = 0;
+void displaySpells(char spells[][MAX_SPELL_LENGTH], int numSpells) {
+    //*testing strategy*
+    //partitioning displaySpells as follows:  normal input size, small input size, maximum input size
+    printf("List of Spells:\n");
     for (int i = 0; i < numSpells; i++) {
-        if (strcmp(spell, spells[i]) == 0) {
-            validSpell = 1;
-            break;
+        printf("%-15s", spells[i]); // Adjust the width as needed
+        if ((i + 1) % 5 == 0 || i == numSpells - 1) {
+            printf("\n");
+        } else {
+            printf("\t");
         }
     }
-
-    // Check if spell has been repeated
-    int repeatedSpell = 0;
-    for (int i = 0; i < boardSize; i++) {
-        if (strcmp(spell, board[i]) == 0) {
-            repeatedSpell = 1;
-            break;
-        }
-    }
-
-    if (!validSpell) {
-        return 0;
-    } else if (repeatedSpell) {
-        return 0;
-    } else {
-        return 1;
-    }
-}
-
-// Add a spell to the board
-void addToBoard(char spell[], char board[][MAX_SPELL_LENGTH], int* boardSize) {
-    strcpy(board[*boardSize], spell);
-    (*boardSize)++;
-}
-void removeLastSpell(char board[][MAX_SPELL_LENGTH], int* boardSize) {
-    (*boardSize)--;
-    board[*boardSize][0] = '\0';
-}
-
-int coinToss() {
-    srand(time(NULL));
-    return rand() % 2;
-}
-
-int playGame(char player1[], char player2[], int startingPlayer, char spells[][MAX_SPELL_LENGTH], int numSpells, char board[][MAX_SPELL_LENGTH], int* boardSize) {
-    int currentPlayer = startingPlayer;
-    int winner = -1; // -1 for no winner, 0 for player 1, 1 for player 2
-
-    printf("%s starts!\n", (currentPlayer == 0) ? player1 : player2);
-
-    char lastSpell[MAX_SPELL_LENGTH] = ""; // Previos spell played
-
-    while (1) {
-        char spell[MAX_SPELL_LENGTH];
-        getPlayerSpell(currentPlayer, spell, player1, player2);
-
-        if (!isMoveValid(spell, spells, numSpells, board, *boardSize)) {
-            winner = 1 - currentPlayer;
-            break;
-        }
-
-        // Checks the Spell Master Condition
-        if (lastSpell[0] != '\0' && spell[0] != lastSpell[strlen(lastSpell) - 1]) {
-            printf("Invalid spell Wizard! The first character does not match the last character of the previous spell.\n");
-            winner = 1 - currentPlayer;
-            break;
-        }
-
-        addToBoard(spell, board, boardSize);
-
-        // Check if the game has ended
-        if (*boardSize == numSpells) {
-            winner = -1;
-            break;
-        }
-
-        // Update last spell played
-        strcpy(lastSpell, spell);
-
-        // Next player
-        currentPlayer = 1 - currentPlayer;
-
-        // Check if other player has any more options lol
-        int opponentHasValidSpells = 0;
-        for (int i = 0; i < numSpells; i++) {
-            if (spells[i][0] == lastSpell[strlen(lastSpell) - 1]) {
-                opponentHasValidSpells = 1;
-                break;
-            }
-        }
-        
-        if (!opponentHasValidSpells) {
-            winner = 1 - currentPlayer;
-            printf("No more spells in the list that satisfy the character matching condition.\n");
-            break;
-        }
-    }
-
-    return winner;
 }

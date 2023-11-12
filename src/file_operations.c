@@ -3,6 +3,8 @@
 #include "file_operations.h"
 
 int readSpells(const char* filename, char spells[][MAX_SPELL_LENGTH]) {
+    //*testing strategy*
+    //partitioning readSpells as follows:  valid file, empty file, file containing too many spells
     FILE* file = fopen(filename, "r");
     if (file == NULL) {
         printf("Error opening file: %s\n", filename);
@@ -20,6 +22,8 @@ int readSpells(const char* filename, char spells[][MAX_SPELL_LENGTH]) {
     return numSpells;
 }
 void displaySpells(char spells[][MAX_SPELL_LENGTH], int numSpells) {
+    //*testing strategy*
+    //partitioning displaySpells as follows:  normal input size, small input size, maximum input size
     printf("List of Spells:\n");
     for (int i = 0; i < numSpells; i++) {
         printf("%-15s", spells[i]); // Adjust the width as needed

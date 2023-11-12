@@ -1,41 +1,36 @@
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
-#include "user_input.h"
-#include "bot.h"
+#include "file_operations.h"
 
-int getPlayerNames(char player1[], char player2[]) {
-    int choice;
-    while (1) {
-        printf("Enter the name of Player 1 (single word, no spaces): ");
-        scanf("%s", player1);
-
-        printf("Choose opponent:\n1. Another Player\n2. Bot\n(Enter 1 or 2)\n");
-        scanf("%d", &choice);
-
-        if (choice == 1) {
-            printf("Enter the name of Player 2 (single word, no spaces): ");
-            scanf("%s", player2);
-
-            if (strcmp(player1, player2) == 0) {
-                printf("Names cannot be the same. Try different names.\n");
-            } else if (strchr(player1, ' ') || strchr(player2, ' ')) {
-                printf("Names must be single words with no spaces. Try again.\n");
-            } else {
-                break;
-            }
-        } else if (choice == 2) {
-            strcpy(player2, "Bot");
-            break;
-        } else {
-            printf("Invalid choice. Please enter 1 or 2.\n");
-        }
+int readSpells(const char* filename, char spells[][MAX_SPELL_LENGTH]) {
+    //*testing strategy*
+    //partitioning readSpells as follows:  valid file, empty file, file containing too many spells
+    FILE* file = fopen(filename, "r");
+    if (file == NULL) {
+        printf("Error opening file: %s\n", filename);
+        return 0; // Return 0 if error
     }
 
-    return choice;
-}
+    int numSpells;
+    fscanf(file, "%d", &numSpells);
 
-void getPlayerSpell(int currentPlayer, char spell[], char player1[], char player2[]) {
-    printf("%s, enter your spell choice: ", (currentPlayer == 0) ? player1 : player2);
-    scanf("%s", spell);
+    for (int i = 0; i < numSpells; i++) {
+        fscanf(file, "%s", spells[i]);
+    }
+
+    fclose(file);
+    return numSpells;
+}
+void displaySpells(char spells[][MAX_SPELL_LENGTH], int numSpells) {
+    //*testing strategy*
+    //partitioning displaySpells as follows:  normal input size, small input size, maximum input size
+    printf("List of Spells:\n");
+    for (int i = 0; i < numSpells; i++) {
+        printf("%-15s", spells[i]); // Adjust the width as needed
+        if ((i + 1) % 5 == 0 || i == numSpells - 1) {
+            printf("\n");
+        } else {
+            printf("\t");
+        }
+    }
 }
