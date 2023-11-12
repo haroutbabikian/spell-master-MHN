@@ -24,6 +24,11 @@ int main() {
         int difficulty;
         printf("Choose bot difficulty:\n1. Easy\n2. Medium\n3. Hard\n(Enter 1, 2 or 3)\n");
         scanf("%d", &difficulty);
+        while (getchar() != '\n');
+        if (difficulty < 1 || difficulty > 3) {
+            printf("Invalid choice. Defaulting to easy.\n");
+            difficulty = 1;
+        }
 
         // Call a function to initialize the bot with the chosen difficulty
         initializeBot(difficulty);

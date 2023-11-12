@@ -219,7 +219,7 @@ int playAgainstBot(char player1[], char player2[], int startingPlayer, char spel
             }
         }
 
-        if (!isMoveValidBot(spell, spells, numSpells, board, *boardSize)) {
+        if (!isMoveValid(spell, spells, numSpells, board, *boardSize)) {
             winner = 1 - currentPlayer;
             break;
         }
@@ -243,7 +243,7 @@ int playAgainstBot(char player1[], char player2[], int startingPlayer, char spel
 
         int opponentHasValidSpells = 0;
         for (int i = 0; i < numSpells; i++) {
-            if (spells[i][0] == lastSpell[strlen(lastSpell) - 1]) {
+            if (spells[i][0] == lastSpell[strlen(lastSpell) - 1] && isMoveValidBot(spells[i], spells, numSpells, board, *boardSize)) {
                 opponentHasValidSpells = 1;
                 break;
             }

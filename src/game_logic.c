@@ -156,10 +156,10 @@ int playGame(char player1[], char player2[], int startingPlayer, char spells[][M
         // Next player
         currentPlayer = 1 - currentPlayer;
 
-        // Check if other player has any more options lol
+        // Check if other player has any more options
         int opponentHasValidSpells = 0;
         for (int i = 0; i < numSpells; i++) {
-            if (spells[i][0] == lastSpell[strlen(lastSpell) - 1]) {
+            if (spells[i][0] == lastSpell[strlen(lastSpell) - 1] && isMoveValidBot(spells[i], spells, numSpells, board, *boardSize)) {
                 opponentHasValidSpells = 1;
                 break;
             }
