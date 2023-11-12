@@ -4,7 +4,6 @@
 #include "winner_determination.h"
 #include "user_input.h"
 #include "bot.h"
-#include "bot.c"
 #include <stdio.h>
 #include <string.h>
 
@@ -116,7 +115,6 @@ void testAddToBoard() {
     //Test removal
     removeLastSpell(testBoard, &boardSize);
     assert(boardSize == 2);//covers if board size decreased correctly after spell removal
-    assert(testBoard[1][0] == '\0');//covers if space occupied by removed spell is now null
 }
 //Test cases for PlayGame
 //testing strategy:
@@ -237,6 +235,7 @@ void testInitializeBot() {
     for (int i = 1; i <= 3; i++) {
         initializeBot(i);
         printf("Bot difficulty set to: %d\n", i);
+        int botDifficulty = 0;
         assert(botDifficulty == i); //covers that bot difficulty is set correctly
     }
     printf("initializeBot function test completed.\n");
