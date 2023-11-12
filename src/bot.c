@@ -11,7 +11,7 @@ void initializeBot(int difficulty) {
     botDifficulty = difficulty;
 }
 
-int chooseBotMove(char spells[][MAX_SPELL_LENGTH], int numSpells, char board[][MAX_SPELL_LENGTH], int boardSize) {
+int chooseBotMoveEasy(char spells[][MAX_SPELL_LENGTH], int numSpells, char board[][MAX_SPELL_LENGTH], int boardSize) {
     for (int i = 0; i < numSpells; i++) {
         if (spells[i][0] == board[boardSize - 1][strlen(board[boardSize - 1]) - 1]) {
             return i; // Bot chooses the first valid spell it finds
@@ -19,6 +19,63 @@ int chooseBotMove(char spells[][MAX_SPELL_LENGTH], int numSpells, char board[][M
     }
 
     return -1; // Bot couldn't find a valid spell
+}
+
+int calculateMatchScore(char spell1[], char spell2[]) {
+    // Calculate a score indicating how well the last letter of spell1 matches the first letter of spell2
+    int score = 0;
+    int len1 = strlen(spell1);
+    int len2 = strlen(spell2);
+
+    for (int i = 1; i <= len1 && i <= len2; i++) {
+        if (spell1[len1 - i] == spell2[i - 1]) {
+            score++;
+        } else {
+            break; // Stop counting when a mismatch is found
+        }
+    }
+
+    return score;
+}
+
+int chooseBotMoveMedium(char spells[][MAX_SPELL_LENGTH], int numSpells, char board[][MAX_SPELL_LENGTH], int boardSize) {
+    int bestScore = -1;
+    int bestMoveIndex = -1;
+
+    for (int i = 0; i < numSpells; i++) {
+        int validMove = 1;
+
+        if (boardSize > 0) {
+            // Check if the last letter of the chosen spell matches the first letter of any other spell on the board
+            for (int j = 0; j < boardSize; j++) {
+                int matchScore = calculateMatchScore(board[j], spells[i]);
+
+                if (matchScore > 0) {
+                    validMove = 0;
+                    break;
+                }
+            }
+        }
+
+        if (validMove) {
+            // Calculate a score indicating how well the last letter of the chosen spell matches the first letter of other spells
+            int totalMatchScore = 0;
+
+            for (int j = 0; j < numSpells; j++) {
+                if (i != j) {
+                    totalMatchScore += calculateMatchScore(spells[i], spells[j]);
+                }
+            }
+
+            // Update the best move if the current move has a higher total match score
+            if (totalMatchScore > bestScore) {
+                bestScore = totalMatchScore;
+                bestMoveIndex = i;
+            }
+        }
+    }
+
+    return bestMoveIndex;
 }
 
 int playAgainstBot(char player1[], char player2[], int startingPlayer, char spells[][MAX_SPELL_LENGTH],
@@ -42,7 +99,15 @@ int playAgainstBot(char player1[], char player2[], int startingPlayer, char spel
                 strcpy(spell, spells[botMoveIndex]);
                 printf("(%s) plays: %s\n", player2, spell);
             } else {
-                int botMoveIndex = chooseBotMove(spells, numSpells, board, *boardSize);
+                int botMoveIndex = -1;
+
+                if (botDifficulty == 1) {
+                    int botMoveIndex = chooseBotMoveEasy(spells, numSpells, board, *boardSize);
+                } else if (botDifficulty == 2) {
+                    int botMoveIndex = chooseBotMoveMedium(spells, numSpells, board, *boardSize);
+                }// } else if (botDifficulty == 3){
+                //     int botMoveIndex = chooseBotMoveHard(spells, numSpells, board, *boardSize);
+                // }
 
                 if (botMoveIndex != -1) {
                     strcpy(spell, spells[botMoveIndex]);
