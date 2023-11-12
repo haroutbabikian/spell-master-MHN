@@ -12,6 +12,11 @@ void initializeBot(int difficulty) {
 }
 
 int chooseBotMoveEasy(char spells[][MAX_SPELL_LENGTH], int numSpells, char board[][MAX_SPELL_LENGTH], int boardSize) {
+    if (boardSize == 0) {
+        // Bot starts first, no need to check for valid spells
+        int botMoveIndex = rand() % numSpells; // Choose any spell randomly
+        return botMoveIndex;
+    }
     for (int i = 0; i < numSpells; i++) {
         if (spells[i][0] == board[boardSize - 1][strlen(board[boardSize - 1]) - 1]) {
             if (isMoveValidBot(spells[i], spells, numSpells, board, boardSize)) {
@@ -33,7 +38,27 @@ int chooseBotMoveMedium(char spells[][MAX_SPELL_LENGTH], int numSpells, char boa
 
     for (int i = 0; i < numSpells; i++) {
         // Check if the spell is valid and has not been used before
-        if (spells[i][0] == board[boardSize - 1][strlen(board[boardSize - 1]) - 1]) {
+        if (boardSize == 0) {
+            if (isMoveValidBot(spells[i], spells, numSpells, board, boardSize)) {
+                // Simulate choosing the current spell to see how it limits the opponent's options
+                memcpy(tempBoard, board, sizeof(tempBoard));
+                addToBoard(spells[i], tempBoard, &tempBoardSize);
+
+                int opponentOptions = 0;
+                for (int j = 0; j < numSpells; j++) {
+                    if (spells[j][0] == tempBoard[tempBoardSize - 1][strlen(tempBoard[tempBoardSize - 1]) - 1])
+                        if (isMoveValidBot(spells[j], spells, numSpells, tempBoard, tempBoardSize)) {
+                            opponentOptions++;
+                        }
+                }
+                // If this move limits the opponent's options more than the current best move,
+                // update the best move index
+                if (opponentOptions < bestOpponentOptions) {
+                    bestOpponentOptions = opponentOptions;
+                    bestMoveIndex = i;
+                }
+            }
+        } else if (spells[i][0] == board[boardSize - 1][strlen(board[boardSize - 1]) - 1]) {
             if (isMoveValidBot(spells[i], spells, numSpells, board, boardSize)) {
                 // Simulate choosing the current spell to see how it limits the opponent's options
                 memcpy(tempBoard, board, sizeof(tempBoard));
@@ -55,8 +80,73 @@ int chooseBotMoveMedium(char spells[][MAX_SPELL_LENGTH], int numSpells, char boa
             }
         }
     }
-
     return bestMoveIndex;
+}
+
+int chooseBotMoveHard(char spells[][MAX_SPELL_LENGTH], int numSpells, char board[][MAX_SPELL_LENGTH], int boardSize) {
+    int winningMoveIndex = findWinningMove(spells, numSpells, board, boardSize);
+
+    if (winningMoveIndex != -1) {
+        // Perform the winning move if available
+        return winningMoveIndex;
+    }
+
+    int blockingMoveIndex = findBlockingMove(spells, numSpells, board, boardSize);
+
+    if (blockingMoveIndex != -1) {
+        // Perform a blocking move if available
+        return blockingMoveIndex;
+    }
+
+    // If no winning or blocking moves, use the medium difficulty strategy
+    return chooseBotMoveMedium(spells, numSpells, board, boardSize);
+}
+
+int findWinningMove(char spells[][MAX_SPELL_LENGTH], int numSpells, char board[][MAX_SPELL_LENGTH], int boardSize) {
+    // Check if there is a move that leads to victory
+    for (int i = 0; i < numSpells; i++) {
+        if (spells[i][0] == board[boardSize - 1][strlen(board[boardSize - 1]) - 1]) {
+            if (isMoveValidBot(spells[i], spells, numSpells, board, boardSize)) {
+                // Simulate choosing the current spell to see if it leads to victory
+                addToBoard(spells[i], board, &boardSize);
+
+                if (boardSize == numSpells) {
+                    // This move leads to victory
+                    removeLastSpell(board, &boardSize); // Undo the simulated move
+                    return i;
+                }
+
+                // Undo the simulated move
+                removeLastSpell(board, &boardSize);
+            }
+        }
+    }
+
+    return -1; // No winning move found
+}
+
+int findBlockingMove(char spells[][MAX_SPELL_LENGTH], int numSpells, char board[][MAX_SPELL_LENGTH], int boardSize) {
+    // Check if there is a move that blocks the opponent from winning
+    for (int i = 0; i < numSpells; i++) {
+        if (spells[i][0] == board[boardSize - 1][strlen(board[boardSize - 1]) - 1]) {
+            if (isMoveValidBot(spells[i], spells, numSpells, board, boardSize)) {
+                // Simulate the opponent choosing the current spell to see if it leads to victory for them
+                addToBoard(spells[i], board, &boardSize);
+
+                int opponentWinningMove = findWinningMove(spells, numSpells, board, boardSize);
+
+                // Undo the simulated move
+                removeLastSpell(board, &boardSize);
+
+                if (opponentWinningMove != -1) {
+                    // This move blocks the opponent from winning
+                    return i;
+                }
+            }
+        }
+    }
+
+    return -1; // No blocking move found
 }
 
 int playAgainstBot(char player1[], char player2[], int startingPlayer, char spells[][MAX_SPELL_LENGTH],
@@ -74,33 +164,23 @@ int playAgainstBot(char player1[], char player2[], int startingPlayer, char spel
         if (currentPlayer == 0) {
             getPlayerSpell(currentPlayer, spell, player1, player2);
         } else {
-            if (*boardSize == 0) {
-                // Bot starts first, no need to check for valid spells
-                int botMoveIndex = rand() % numSpells; // Choose any spell randomly
+            int botMoveIndex = -1;
+
+            if (botDifficulty == 1) {
+                botMoveIndex = chooseBotMoveEasy(spells, numSpells, board, *boardSize);
+            } else if (botDifficulty == 2) {
+                botMoveIndex = chooseBotMoveMedium(spells, numSpells, board, *boardSize);
+            } else if (botDifficulty == 3){
+                botMoveIndex = chooseBotMoveHard(spells, numSpells, board, *boardSize);
+            }
+
+            if (botMoveIndex != -1) {
                 strcpy(spell, spells[botMoveIndex]);
                 printf("(%s) plays: %s\n", player2, spell);
             } else {
-                int botMoveIndex = -1;
-
-                if (botDifficulty == 1) {
-                    botMoveIndex = chooseBotMoveEasy(spells, numSpells, board, *boardSize);
-                    printf("botMoveIndex: %d\n", botMoveIndex);
-                } else if (botDifficulty == 2) {
-                    botMoveIndex = chooseBotMoveMedium(spells, numSpells, board, *boardSize);
-
-                    printf("botMoveIndex: %d\n", botMoveIndex);
-                }// } else if (botDifficulty == 3){
-                //     int botMoveIndex = chooseBotMoveHard(spells, numSpells, board, *boardSize);
-                // }
-
-                if (botMoveIndex != -1) {
-                    strcpy(spell, spells[botMoveIndex]);
-                    printf("(%s) plays: %s\n", player2, spell);
-                } else {
-                    printf("(%s) has no valid moves.\n", player2);
-                    winner = 1;
-                    break;
-                }
+                printf("(%s) has no valid moves.\n", player2);
+                winner = 1;
+                break;
             }
         }
 

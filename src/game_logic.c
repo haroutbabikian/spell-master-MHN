@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <time.h>
 #include "game_logic.h"
 #include "user_input.h"
 
@@ -73,6 +74,7 @@ void removeLastSpell(char board[][MAX_SPELL_LENGTH], int* boardSize) {
 }
 
 int coinToss() {
+    srand(time(NULL));
     return rand() % 2;
 }
 

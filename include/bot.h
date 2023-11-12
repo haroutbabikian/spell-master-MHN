@@ -11,6 +11,10 @@ int chooseBotMoveMedium(char spells[][MAX_SPELL_LENGTH], int numSpells, char boa
 
 int chooseBotMoveHard(char spells[][MAX_SPELL_LENGTH], int numSpells, char board[][MAX_SPELL_LENGTH], int boardSize);
 
+int findWinningMove(char spells[][MAX_SPELL_LENGTH], int numSpells, char board[][MAX_SPELL_LENGTH], int boardSize);
+
+int findBlockingMove(char spells[][MAX_SPELL_LENGTH], int numSpells, char board[][MAX_SPELL_LENGTH], int boardSize);
+
 int playAgainstBot(char player1[], char player2[], int startingPlayer, char spells[][MAX_SPELL_LENGTH],
                    int numSpells, char board[][MAX_SPELL_LENGTH], int* boardSize);
 
