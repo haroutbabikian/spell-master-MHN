@@ -4,12 +4,6 @@
 #include "game_logic.h"
 #include "user_input.h"
 
-
-
-// Function: isMoveValid
-// Signature: int isMoveValid(char spell[], char spells[][MAX_SPELL_LENGTH], int numSpells, char board[][MAX_SPELL_LENGTH], int boardSize)
-// Requirement: Checks if a given spell is valid (in spell list and not repeated).
-// Effects: Returns 1 if valid; otherwise prints error message and returns 0.
 int isMoveValid(char spell[], char spells[][MAX_SPELL_LENGTH], int numSpells, char board[][MAX_SPELL_LENGTH], int boardSize) {
     // Check if spell is in the list
     int validSpell = 0;
@@ -40,30 +34,16 @@ int isMoveValid(char spell[], char spells[][MAX_SPELL_LENGTH], int numSpells, ch
     }
 }
 
-// Function: addToBoard
-// Signature: void addToBoard(char spell[], char board[][MAX_SPELL_LENGTH], int* boardSize)
-// Requirement: Adds a spell to the game board.
-// Effects: Copies 'spell' into the board and increments 'boardSize'.
+// Add a spell to the board
 void addToBoard(char spell[], char board[][MAX_SPELL_LENGTH], int* boardSize) {
     strcpy(board[*boardSize], spell);
     (*boardSize)++;
 }
 
-
-
-// Function: coinToss
-// Signature: int coinToss()
-// Requirement: Generates a random outcome to simulate a coin toss.
-// Effects: Returns 0 or 1, randomly decided.
 int coinToss() {
     return rand() % 2;
 }
 
-
-// Function: playGame
-// Signature: int playGame(char player1[], char player2[], int startingPlayer, char spells[][MAX_SPELL_LENGTH], int numSpells, char board[][MAX_SPELL_LENGTH], int* boardSize)
-// Requirement: Manages gameplay, alternating turns and checking for game end conditions.
-// Effects: Executes game logic and determines the winner. Returns winner identifier.
 int playGame(char player1[], char player2[], int startingPlayer, char spells[][MAX_SPELL_LENGTH], int numSpells, char board[][MAX_SPELL_LENGTH], int* boardSize) {
     int currentPlayer = startingPlayer;
     int winner = -1; // -1 for no winner, 0 for player 1, 1 for player 2
