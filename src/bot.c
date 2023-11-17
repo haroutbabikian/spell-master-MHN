@@ -74,26 +74,6 @@ int chooseBotMoveMedium(char spells[][MAX_SPELL_LENGTH], int numSpells, char boa
                     bestMoveIndex = i;
                 }
             }
-        } else if (spells[i][0] == board[boardSize - 1][strlen(board[boardSize - 1]) - 1]) {
-            if (isMoveValidBot(spells[i], spells, numSpells, board, boardSize)) {
-                // Simulate choosing the current spell to see how it limits the opponent's options
-                memcpy(tempBoard, board, sizeof(tempBoard));
-                addToBoard(spells[i], tempBoard, &tempBoardSize);
-
-                int opponentOptions = 0;
-                for (int j = 0; j < numSpells; j++) {
-                    if (spells[j][0] == tempBoard[tempBoardSize - 1][strlen(tempBoard[tempBoardSize - 1]) - 1])
-                        if (isMoveValidBot(spells[j], spells, numSpells, tempBoard, tempBoardSize)) {
-                            opponentOptions++;
-                        }
-                }
-                // If this move limits the opponent's options more than the current best move,
-                // update the best move index
-                if (opponentOptions < bestOpponentOptions) {
-                    bestOpponentOptions = opponentOptions;
-                    bestMoveIndex = i;
-                }
-            }
         }
     }
     return bestMoveIndex;
